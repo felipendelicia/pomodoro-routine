@@ -1,42 +1,30 @@
-import time
-from progress.bar import IncrementalBar
+from modules import bars, sounds, timeConversion
 
-def passMinutesToSeconds(minutes:int):
-    return minutes*60
+def run_pomodoro():
 
-def playSound(file:str):
-    import playsound
-    from pathlib import Path
-    playsound.playsound(str(Path.cwd()) + '/sound/' + file)
+    studyRound = 1
 
-def LoadBar(minutes:int, task:str):
+    minutesOfStudy = int(input('Input study time (minutes): '))
+    secondsOfStudy = timeConversion.passMinutestoSeconds(minutesOfStudy)
 
-    seconds = passMinutesToSeconds(minutes)
+    minutesOfRelax = int(input('Input relax time (minutes): '))
+    secondsOfRelax = timeConversion.passMinutestoSeconds(minutesOfRelax)
 
-    with IncrementalBar(task, max=seconds, suffix='%(percent).1f%% - %(eta)ds') as bar:
-        for i in range(seconds):
-            time.sleep(1)
-            bar.next()
+    input('Press any key to start your training')
 
-studyRound = 1
+    while True:
+        sounds.playSound('start.mp3')
 
-minutesOfStudy = int(input('Input study time (minutes): '))
+        print('Starting', studyRound, 'round of study')
+        bars.LoadBar(secondsOfStudy, 'Studying...')
 
-minutesOfRelax = int(input('Input relax time (minutes): '))
+        sounds.playSound('stop.mp3')
 
-input('Press any key to start your training')
+        print('Starting', studyRound, 'round of relax')
+        bars.LoadBar(secondsOfRelax, 'Relaxing...')
 
-while True:
+        input('Press any key to continue to the next round')
 
-    print('Starting', studyRound, 'round of study')
-    LoadBar(minutesOfStudy, 'Studying...')
-    playSound('achievement.mp3')
+        studyRound += 1
 
-    print('Starting', studyRound, 'round of relax')
-    LoadBar(minutesOfRelax, 'Relaxing...')
-    playSound('achievement.mp3')
-
-    input('Press any key to continue to the next round')
-
-    studyRound+=1
-    
+run_pomodoro()

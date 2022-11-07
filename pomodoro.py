@@ -42,7 +42,11 @@ def run_pomodoro():
             'Relaxing...'
         )
 
+        sounds.playSound('achievement.mp3')
+
         input('Press any key to continue to the next round')
+
+        print()
 
         pomodoro += 1
 

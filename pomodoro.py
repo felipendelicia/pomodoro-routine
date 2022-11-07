@@ -1,42 +1,49 @@
-import time
-from progress.bar import IncrementalBar
+from modules import bars, sounds, timeConversion
 
-def passMinutesToSeconds(minutes:int):
-    return minutes*60
+'''
+    pomodoro : int = Number of pomodoro rounds.
+    percentageOfIncrease : int = Percentage of increase the time of rest.
+    rangeOfIncrease : int = Number of pomodoros to increase the rest time.
+    inputSeconds : int = user input seconds.
 
-def playSound(file:str):
-    import playsound
-    from pathlib import Path
-    playsound.playsound(str(Path.cwd()) + '/sound/' + file)
+    return : int = Relax time based on pomodoros.
+'''
 
-def LoadBar(minutes:int, task:str):
-
-    seconds = passMinutesToSeconds(minutes)
-
-    with IncrementalBar(task, max=seconds, suffix='%(percent).1f%% - %(eta)ds') as bar:
-        for i in range(seconds):
-            time.sleep(1)
-            bar.next()
-
-studyRound = 1
-
-minutesOfStudy = int(input('Input study time (minutes): '))
-
-minutesOfRelax = int(input('Input relax time (minutes): '))
-
-input('Press any key to start your training')
-
-while True:
-
-    print('Starting', studyRound, 'round of study')
-    LoadBar(minutesOfStudy, 'Studying...')
-    playSound('achievement.mp3')
-
-    print('Starting', studyRound, 'round of relax')
-    LoadBar(minutesOfRelax, 'Relaxing...')
-    playSound('achievement.mp3')
-
-    input('Press any key to continue to the next round')
-
-    studyRound+=1
+def setPomodoroSecondsOfRelax(pomodoro:int, percentageOfIncrease:int, rangeOfIncrease:int, inputSeconds:int):
+    rangePassedTimes = pomodoro // rangeOfIncrease
+    increasedTime = rangePassedTimes * ( percentageOfIncrease / 100 ) * inputSeconds
+    return int(increasedTime + inputSeconds)
     
+
+def run_pomodoro():
+
+    pomodoro = 1
+
+    minutesOfStudy = int(input('Input study time (minutes): '))
+    secondsOfStudy = timeConversion.passMinutestoSeconds(minutesOfStudy)
+
+    minutesOfRelax = int(input('Input relax time (minutes): '))
+    secondsOfRelax = timeConversion.passMinutestoSeconds(minutesOfRelax)
+
+    input('Press any key to start your training')
+
+    while True:
+
+        sounds.playSound('start.mp3')
+
+        print('Starting', pomodoro, 'pomodoro of study')
+        bars.LoadBar(secondsOfStudy, 'Studying...')
+
+        sounds.playSound('stop.mp3')
+
+        print('Starting', pomodoro, 'pomodoro of relax')
+        bars.LoadBar(
+            setPomodoroSecondsOfRelax(pomodoro, 50, 4, secondsOfRelax),
+            'Relaxing...'
+        )
+
+        input('Press any key to continue to the next round')
+
+        pomodoro += 1
+
+run_pomodoro()

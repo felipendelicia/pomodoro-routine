@@ -1,1 +1,0 @@
-passMinutestoSeconds = lambda minutes: minutes * 60

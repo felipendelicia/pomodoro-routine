@@ -9,7 +9,7 @@ passMinutestoSeconds = lambda minutes: minutes * 60
     return : int = Relax time based on pomodoros.
 '''
 
-def setPomodoroSecondsOfRelax(pomodoro:int, percentageOfIncrease:int, rangeOfIncrease:int, inputSeconds:int):
+def setPomodoroSecondsOfRelax(pomodoro:int, relaxIncrementPercentage:int, rangeOfIncrease:int, inputSeconds:int):
     rangePassedTimes = pomodoro // rangeOfIncrease
-    increasedTime = rangePassedTimes * ( percentageOfIncrease / 100 ) * inputSeconds
+    increasedTime = rangePassedTimes * ( relaxIncrementPercentage / 100 ) * inputSeconds
     return int(increasedTime + inputSeconds)
